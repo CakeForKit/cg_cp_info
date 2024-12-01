@@ -1,0 +1,2 @@
+r_chess 15.45
+delta_r 0.55

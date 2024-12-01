@@ -1,0 +1,28 @@
+\include{mypreambula}
+
+\begin{document}
+	
+	\includepdf{title.pdf}
+	\includepdf{tz.pdf}
+	
+	\setcounter{page}{3}
+	
+%	\def\contentsname{\begin{center}СОДЕРЖАНИЕ\end{center}}
+%	\tableofcontents
+	\renewcommand\contentsname{СОДЕРЖАНИЕ}
+	\tableofcontents
+	
+	\include{01_referat}
+	
+%	\include{tmp}
+	\include{02_intro}
+	\include{03_analytic_part}
+%	\include{04_design_part}
+%	\include{05_tech_part}
+	\include{06_experimental_part}
+%	\include{07_conclusion}
+	
+	\include{links}
+	
+	%\include{08_additions}
+\end{document}
