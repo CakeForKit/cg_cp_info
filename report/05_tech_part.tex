@@ -1,23 +1,134 @@
 \chapter{Технологическая часть}
 
-В данном разделе представлены средства реализации, формат входных и выходных данных, требования к ПО, разработанные типы и структуры
-данных и алгоритмы, интерфейс ПО и тестирование ПО.
-
-В данном разделе будут приведены средства реализации, листинг кода, функциональные тесты, модель вычислений и трудоемкость алгоритмов.
+В данном разделе представлены средства реализации, листинги основных алгоритмов, описаны процесс сборки, интерфейс приложения и методы тестирования.
 
 \section{Средства реализации}
-В данной работе для реализации был выбран язык программирования $Python$\cite{python-city}, так как он удовлетворяет требованиям лабраторной работы: поддерживает динамические структуры данных,
-такие как массивы и имеет библиотеку $Matplotlib$\cite{matplotlib-lib} для построения графиков.
+В качестве языка программирования был выбран \texttt{C++}~\cite{cpp} в силу следующих причин:
+\begin{itemize}
+	\item В стандартной библиотеке языка присутствует поддержка всех структур данных, выбранных по результатам проектирования;
+	\item Средствами языка можно реализовать все алгоритмы, выбранные в результате проектирования;
+\end{itemize}
+
+Для создания пользовательского интерфейса был использован фреймворк~\texttt{QT}~\cite{qt}, так как данный фреймфорк предоставляет инструменты для создания пользовательских интерфейсов и поддерживается язык программирования~\texttt{C++}.
+
+Для сборки программного обеспечения использовалась утилита~\texttt{CMake}~\cite{cmake}, так как с ee помощью возможно управлять процессом компиляции и сборки проекта, написанного на \texttt{C++}.
+
+Для модульного тестирования компонент программного обеспечения был выбран фреймворк~\texttt{GoogleTest}~\cite{gtest}, так как данный фреймфорк предоставляет инструменты для написания модульных тестов на языке~\texttt{C++}.
+
+\clearpage
+\section{Реализации алгоритмов}
+В листингах~\ref{lst:ray_tracing}-\ref{lst:castRay} представлены реализация алгоритма обратной трассировки лучей и алгоритма испускания луча.
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\renewcommand{\lstlistingname}{Листинг}
+	\begin{lstlisting}[label=lst:ray_tracing, caption=Реализация алгоритма обратной трассировки лучей]
+	void RayTracing::render() {
+		for (int j = 0; j < drawer->getImgHeight(); ++j) {
+			for (int i = 0; i < drawer->getImgWidth(); ++i) {
+				Ray ray = camera->createRay(i, j);
+				Intensity intens = castRay(ray);
+				drawer->setPixelColor(i, j, Color(intens));
+			}
+		}
+		drawer->setScene();
+	}
+	\end{lstlisting}
+\end{center}
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\renewcommand{\lstlistingname}{Листинг}
+	\begin{lstlisting}[label=lst:castRay, caption=Реализация алгоритма испускания луча]
+	Intensity StandardRayTracing::castRay(Ray &ray, const size_t depth, bool printing) const noexcept {
+		if (!ray.getDirection().isNormalized())
+		ray.getDirection().normalize();
+		
+		Intensity color(0, 0, 0);
+		
+		intersection_t intersect;
+		if (scene->intersection(ray, intersect) && depth < maxDepth) {
+			Point3 posLight;  
+			Vector3 L;          
+			intersection_t tmpIntersect;
+			Vector3 diff, spec;
+			double ddist;
+			for (Scene::iteratorLight it = scene->beginLight(); it != scene->endLight(); ++it) {
+				if ((*it)->getType() == typeLight::POINT) {
+					L = (posLight - intersect.point).normalized();  
+					
+					if (fabs(intersect.normal.length()) < EPS) {
+						return Intensity(1, 0, 0);
+					}
+					if (!intersect.normal.isNormalized())
+					intersect.normal.normalize();
+					double nL = L.scalarProduct(intersect.normal);  
+					
+					if (nL > 0 && !scene->intersection(Ray(intersect.point + 1e-3 * intersect.normal, L), tmpIntersect)) {
+						
+						diff = intersect.material->getKd() * nL;
+						
+						Vector3 reflectLight = L.reflect(intersect.normal);
+						double SR = reflectLight.scalarProduct(-ray.getDirection());
+						if (SR < 0)
+						SR = 0;
+						spec = intersect.material->getKs() * pow(SR, intersect.material->getN());
+						
+						ddist = (posLight - intersect.point).length() / (posLight.length() + EPS);
+						if (ddist > 1.0)
+						ddist = 1;
+						else if (ddist < 0.4)
+						ddist = 0.4;
+						
+						color += (diff + spec) * (*it)->getIntensity() / ddist;  
+					}
+					
+				} else if ((*it)->getType() == typeLight::AMBIENT) {
+					color += intersect.material->getKa() * (*it)->getIntensity();
+				}
+			}
+			
+			Vector3 reflectVec = ray.getDirection().reflect(intersect.normal);
+			Ray reflectRay(intersect.point + 1e-3 * intersect.normal, reflectVec);
+			Intensity reflectIntensity = castRay(reflectRay, depth + 1);
+
+			color += intersect.material->getKs() * reflectIntensity;
+		}
+		else 
+		color = Intensity(0.3, 0.3, 0.3);
+		
+		return color;
+	}
+	\end{lstlisting}
+\end{center}
+\clearpage
 
 
+\section{Описание процесса сборки приложения}
+Для сборки программного обеспечения использовалась утилита~\texttt{CMake}~\cite{cmake}. Для сборки приложения необходимо в командной строке, находясь в директории проекта, выполнить следующие команды~\ref{lst:build}.
+
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	\renewcommand{\lstlistingname}{Листинг}
+	\begin{lstlisting}[label=lst:build, caption=Сборка программного обеспечения]
+$ cd build
+$ cmake -S ..
+$ cmake -build .
+	\end{lstlisting}
+\end{center}
+\clearpage
+
+\section{Описание интерфейса приложения}
+
+\clearpage
+\section{Тестирование}
+
+\subsection{Функциональное тестирование}
+
+\subsection{Модульное тестирование}
 
 
-
-\section*{Вывод}
-
-%Были представлены средства реализации, листинг кода, функциональные тесты, модель вычислений и трудоемкость алгоритмов.
-%
-%По результатам вычисления трудоемкости алгоритмов оптимизированный алгоритм Винограда должен работать быстрее остальных, а неоптимизированный алгоритм Винограда медленнее. ($f_{new_vin} < f_{std} < f_{vin}$, $11MNQ < 14MNQ < 16MNQ$)
-%
-
+\clearpage
+\section*{Вывод из технологической части}
+Было реализовано програмное обеспечение и в данном разделе были представлены средства реализации, листинги основных алгоритмов, описаны процесс сборки, интерфейс приложения и методы тестирования.
 \clearpage

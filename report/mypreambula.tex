@@ -38,6 +38,10 @@
 \renewcommand\large{\@setfontsize\large{16pt}{20}}
 \makeatother
 
+\newcommand{\ssr}[1]{\begin{center}
+		\large\bfseries{#1}
+	\end{center} \addcontentsline{toc}{chapter}{#1}  }
+
 \usepackage{titlesec}
 %\titleformat{команда}{формат}{метка}{отступ}{до-кода}[после-кода]
 %- **команда**: Уровень заголовка, который вы хотите настроить (например, `\chapter`, `\section`, `\subsection` и т.д.).

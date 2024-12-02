@@ -579,7 +579,7 @@
 												"$ref": "AAAAAAGPyTLl2RnEVnQ="
 											},
 											"fillColor": "#FFFFFF",
-											"font": "Times New Roman;14;1",
+											"font": "Times New Roman;14;3",
 											"left": 397,
 											"top": 223,
 											"width": 127,
@@ -8899,7 +8899,8 @@
 							},
 							"name": "isComposite"
 						}
-					]
+					],
+					"isAbstract": true
 				},
 				{
 					"_type": "UMLClass",
