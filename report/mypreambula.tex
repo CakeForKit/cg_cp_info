@@ -50,7 +50,6 @@
 \titleformat{name=\chapter,numberless}{}{}{0pt}{\large\bfseries\centering}	% к команде `\chapter*{...}`.
 \titleformat{\section}{\large\bfseries}{\thesection}{14pt}{\large\bfseries}
 \titleformat{\subsection}{\large\bfseries}{\thesubsection}{14pt}{\large\bfseries}
-\titleformat{name=\subsection,numberless}{\large\bfseries}{\thesubsection}{14pt}{\large\bfseries}
 %\titlespacing{команда}{отступ слева}{отступ перед заголовком}{отступ после заголовка}[отступ справа]
 \titlespacing{\chapter}{12.5mm}{-22pt}{10pt}
 \titlespacing{\section}{12.5mm}{10pt}{10pt}
@@ -96,27 +95,28 @@
 	\end{figure}
 }
 
-\newcommand{\img}[3] {
-\begin{figure}[t!]
-    \center{\includegraphics[height=#1]{inc/img/#2}}
+\newcommand{\imgh}[3] {
+\begin{figure}[h!]
+    \center{\includegraphics[height=#1]{img/#2}}
     \caption{#3}
     \label{img:#2}
 \end{figure}
 }
 \newcommand{\imgw}[3] {
 \begin{figure}[h!]
-    \center{\includegraphics[width=#1]{inc/img/#2}}
+    \center{\includegraphics[width=#1]{img/#2}}
     \caption{#3}
     \label{img:#2}
 \end{figure}
 }
 \newcommand{\boximg}[3] {
 \begin{figure}[h]
-    \center{\fbox{\includegraphics[height=#1]{inc/img/#2}}}
+    \center{\fbox{\includegraphics[height=#1]{img/#2}}}
     \caption{#3}
     \label{img:#2}
 \end{figure}
 }
+
 % ---------------------------------------------------------------------
 % ---------- Листинг --------------------------------------------------
 \usepackage{listings}
