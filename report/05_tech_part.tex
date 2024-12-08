@@ -11,9 +11,11 @@
 
 Для создания пользовательского интерфейса был использован фреймворк~\texttt{QT}~\cite{qt}, так как данный фреймфорк предоставляет инструменты для создания пользовательских интерфейсов и поддерживается язык программирования~\texttt{C++}.
 
-Для сборки программного обеспечения использовалась утилита~\texttt{CMake}~\cite{cmake}, так как с ee помощью возможно управлять процессом компиляции и сборки проекта, написанного на \texttt{C++}.
+%Для сборки программного обеспечения использовалась утилита~\texttt{CMake}~\cite{cmake}, так как с ee помощью возможно управлять процессом компиляции и сборки проекта, написанного на \texttt{C++}.
 
 Для модульного тестирования компонент программного обеспечения был выбран фреймворк~\texttt{GoogleTest}~\cite{gtest}, так как данный фреймфорк предоставляет инструменты для написания модульных тестов на языке~\texttt{C++}.
+
+Для определения покрытия кода использовалась утилита~\texttt{gcov}~\cite{gcov}.
 
 \clearpage
 \section{Реализации алгоритмов}
@@ -104,31 +106,85 @@
 \clearpage
 
 
-\section{Описание процесса сборки приложения}
-Для сборки программного обеспечения использовалась утилита~\texttt{CMake}~\cite{cmake}. Для сборки приложения необходимо в командной строке, находясь в директории проекта, выполнить следующие команды~\ref{lst:build}.
-
-\begin{center}
-	\captionsetup{justification=raggedright,singlelinecheck=off}
-	\renewcommand{\lstlistingname}{Листинг}
-	\begin{lstlisting}[label=lst:build, caption=Сборка программного обеспечения]
-$ cd build
-$ cmake -S ..
-$ cmake -build .
-	\end{lstlisting}
-\end{center}
-\clearpage
+%\section{Описание процесса сборки приложения}
+%Для сборки программного обеспечения использовалась утилита~\texttt{CMake}~\cite{cmake}. Для сборки приложения необходимо в командной строке, находясь в директории проекта, выполнить следующие команды~\ref{lst:build}.
+%
+%\begin{center}
+%	\captionsetup{justification=raggedright,singlelinecheck=off}
+%	\renewcommand{\lstlistingname}{Листинг}
+%	\begin{lstlisting}[label=lst:build, caption=Сборка программного обеспечения]
+%$ cd build
+%$ cmake -S ..
+%$ cmake -build .
+%	\end{lstlisting}
+%\end{center}
+%\clearpage
 
 \section{Описание интерфейса приложения}
+На рисунках~\ref{img:interface_create}-\ref{img:interface_tab} представлен интерфейс программы. 
+
+На рисунке~\ref{img:interface_create} представлена вкладка добавления фигуры определенного игрока из выпадающего списка на позицию шахматной доски, изменение цветового набора и изменения материала шахматной доски. На рисунке~\ref{img:interface_move} представлена вкладка изменения позиции и вращения модели с индексом, определенным на вкладке~\ref{img:interface_tab}. На рисунке~\ref{img:interface_camera} представлена вкладка изменения позиции и вращения камеры. На рисунке~\ref{img:interface_scene} представлена вкладка изменения содержимого сцены. На рисунке~\ref{img:interface_scene} представлена вывода информации о сцене.
+
+\FloatBarrier
+\imgw{0.5\textwidth}{interface_create}{Интерфейс программы. Вкладка добавления моделей и настроек материалов}
+\FloatBarrier
+\imgw{0.5\textwidth}{interface_move}{Интерфейс программы. Вкладка изменения позиции модели}
+\FloatBarrier
+\imgw{0.5\textwidth}{interface_camera}{Интерфейс программы. Вкладка изменения позиции камеры}
+\FloatBarrier
+\imgw{0.5\textwidth}{interface_scene}{Интерфейс программы. Вкладка настроек сцены}
+\FloatBarrier
+\imgw{0.5\textwidth}{interface_tab}{Интерфейс программы. Вкладка вывода информации о сцене}
+\FloatBarrier
 
 \clearpage
 \section{Тестирование}
 
 \subsection{Функциональное тестирование}
+Для функционального тестирования была рассмотрена сцена, на которой изображены все виды фигур, и выделены следующие классы эквивалентности:
+\begin{itemize}
+	\item Камера расположена под углом $30^\circ$~(\ref{img:ft_3});
+	\item Вид сбоку~(\ref{img:ft_2});
+	\item Вид сверху~(\ref{img:ft_1});
+\end{itemize}
+
+\FloatBarrier
+\imgw{0.5\textwidth}{ft_3}{Камера расположена под углом $30^\circ$}
+\FloatBarrier
+\imgw{0.5\textwidth}{ft_2}{Вид сбоку}
+\FloatBarrier
+\imgw{0.5\textwidth}{ft_1}{Вид сверху}
+\FloatBarrier
 
 \subsection{Модульное тестирование}
+Для модульного тестирования компонент программного обеспечения испозьвался фреймворк~\texttt{GoogleTest}~\cite{gtest}. 
 
+Были созданы параметризованные тесты для функций классов: $Camera$, $RayTracing$, $Ray$, $Triangle$ и $TransformAction$. Для тестов каждого рассматриваемого объекта использовался класс фиксации, в котором производились настройки окружения, например создание классов $SceneManager$ и $MaterialManager$, в функции SetUp, а так же освобождение памяти, при необходимости, в функции TearDown.
+
+
+\subsection{Результаты тестирования}
+
+В качестве меры полноты тестирования был выбран процент покрытия строк кода. Результаты тестирования, были обработаны утилитой~\texttt{lcov}~\cite{lcov} и представленый в таблице~\ref{tbl:resTest}:
+
+\begin{longtable}{|
+		>{\raggedright\arraybackslash}p{.25\textwidth - 2\tabcolsep}|
+		>{\raggedright\arraybackslash}p{.25\textwidth - 2\tabcolsep}|
+		>{\raggedright\arraybackslash}p{.25\textwidth - 2\tabcolsep}|
+		>{\raggedright\arraybackslash}p{.25\textwidth - 2\tabcolsep}|
+	}
+	\caption{Результаты тестирования}\label{tbl:resTest} \\\hline
+	 & Hit & Total & Coverage \\\hline
+	\endfirsthead
+	\caption*{Продолжение таблицы~\ref{tbl:log} } \\\hline
+	 & Hit & Total & Coverage \\\hline \\\hline                    
+	\endhead
+	\endfoot
+	Lines & 2071 & 2998 & 69.1 \% \\\hline
+	Functions & 318 & 463 & 68.7 \% \\\hline
+	
+\end{longtable}
 
 \clearpage
 \section*{Вывод из технологической части}
-Было реализовано програмное обеспечение и в данном разделе были представлены средства реализации, листинги основных алгоритмов, описаны процесс сборки, интерфейс приложения и методы тестирования.
+Было реализовано програмное обеспечение и представлены средства реализации, листинги основных алгоритмов, описаны интерфейс приложения и методы тестирования.
 \clearpage

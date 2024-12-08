@@ -20,7 +20,7 @@ def chessboard(width_cell, board_plus, height_chessboard):
         z = -4 * width_cell
         while z < 5 * width_cell:
             points.append((x, 0, z))
-            # print(f'{i}: ', (x, 0, z), f'\t({i // 9}, {i % 9})')
+            print(f'{i}: ', (x, 0, z), f'\t({i // 9}, {i % 9})')
             i += 1
 
             z += width_cell
@@ -58,6 +58,8 @@ def chessboard(width_cell, board_plus, height_chessboard):
         z = pts[2]
         return (x, y, z)
 
+    p = plus_board(points[8]) # указатель на (0, 0)
+    # p = (p[0], p[1] + height_chessboard // 2, p[2])
     basep.extend(
                 [points[0], points[8], points[80], points[72], # 0 1 2 3
                 plus_board(points[0]),      # 4
@@ -68,13 +70,19 @@ def chessboard(width_cell, board_plus, height_chessboard):
                 minus_y(plus_board(points[8])),     # 9
                 minus_y(plus_board(points[80])),    # 10
                 minus_y(plus_board(points[72])),    # 11
+                (p[0], p[1] + height_chessboard // 2, p[2]),                                                              # 12
+                 (p[0], p[1], p[2] - board_plus * 2),       # 13
+                 (p[0] + board_plus * 2, p[1], p[2])     # 14
                ]
     )
+
     basev.extend([(0, 4, 5), (0, 5, 1), (1, 5, 6), (1, 6, 2),
                   (2, 6, 7), (2, 7, 3), (3, 7, 4), (0, 4, 3),
                   (8, 9, 10), (8, 10, 11),
                   (8, 4, 5), (8, 9, 5), (9, 5, 6), (9, 10, 6),
-                  (10, 6, 7), (10, 11, 7), (11, 7, 4), (11, 8, 6)])
+                  (10, 6, 7), (10, 11, 7), (11, 7, 4), (11, 8, 6),
+                  (5, 12, 13), (5, 12, 14), (12, 13, 14)
+                  ])
 
     def write_data_to_file(f, text_name):
         f.write(text_name)

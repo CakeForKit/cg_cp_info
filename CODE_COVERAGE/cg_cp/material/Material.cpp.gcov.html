@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - gtest_coverage.info - cg_cp/material/Material.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">cg_cp/material</a> - Material.cpp<span style="font-size: 80%;"> (source / <a href="Material.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">gtest_coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">31</td>
+            <td class="headerCovTableEntry">31</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2024-12-08 02:11:07</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #include &quot;Material.h&quot;</a>
+<a name="2"><span class="lineNum">       2 </span>            : </a>
+<a name="3"><span class="lineNum">       3 </span><span class="lineCov">         35 : std::ostream&amp; Material::print(std::ostream &amp;os) const noexcept {</span></a>
+<a name="4"><span class="lineNum">       4 </span><span class="lineCov">         35 :     os &lt;&lt; &quot;Material:\n&quot;;</span></a>
+<a name="5"><span class="lineNum">       5 </span><span class="lineCov">         35 :     os &lt;&lt; &quot;\tka = &quot; &lt;&lt; ka &lt;&lt; &quot;\n&quot;;</span></a>
+<a name="6"><span class="lineNum">       6 </span><span class="lineCov">         35 :     os &lt;&lt; &quot;\tkd = &quot; &lt;&lt; kd &lt;&lt; &quot;\n&quot;;</span></a>
+<a name="7"><span class="lineNum">       7 </span><span class="lineCov">         35 :     os &lt;&lt; &quot;\tks = &quot; &lt;&lt; ks &lt;&lt; &quot;\n&quot;;</span></a>
+<a name="8"><span class="lineNum">       8 </span><span class="lineCov">         35 :     os &lt;&lt; &quot;\tn = &quot; &lt;&lt; n &lt;&lt; &quot;\n&quot;;</span></a>
+<a name="9"><span class="lineNum">       9 </span><span class="lineCov">         35 :     return os;</span></a>
+<a name="10"><span class="lineNum">      10 </span>            : }</a>
+<a name="11"><span class="lineNum">      11 </span>            : </a>
+<a name="12"><span class="lineNum">      12 </span><span class="lineCov">         35 : std::ostream&amp; operator&lt;&lt;(std::ostream &amp;os, const Material &amp;m) {</span></a>
+<a name="13"><span class="lineNum">      13 </span><span class="lineCov">         35 :     return m.print(os);</span></a>
+<a name="14"><span class="lineNum">      14 </span>            : }</a>
+<a name="15"><span class="lineNum">      15 </span>            : </a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">       1057 : Material::Material(Intensity &amp;&amp;_ka, Intensity &amp;&amp;_kd, Intensity &amp;&amp;_ks, double _n)</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       1057 : : ka(_ka), kd(_kd), ks(_ks), n(_n) {</span></a>
+<a name="18"><span class="lineNum">      18 </span>            :     // double xsum, ysum, zsum;</a>
+<a name="19"><span class="lineNum">      19 </span>            :     // xsum = ka.x() + kd.x() + 2 * ks.x();</a>
+<a name="20"><span class="lineNum">      20 </span>            :     // ysum = ka.y() + kd.y() + 2 * ks.y();</a>
+<a name="21"><span class="lineNum">      21 </span>            :     // zsum = ka.z() + kd.z() + 2 * ks.z();</a>
+<a name="22"><span class="lineNum">      22 </span>            :     // assert(0 &lt;= xsum &amp;&amp; xsum &lt;= 1.0 + EPS);</a>
+<a name="23"><span class="lineNum">      23 </span>            :     // assert(0 &lt;= ysum &amp;&amp; ysum &lt;= 1.0 + EPS);</a>
+<a name="24"><span class="lineNum">      24 </span>            :     // assert(0 &lt;= zsum &amp;&amp; zsum &lt;= 1.0 + EPS);</a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">       1057 : }</span></a>
+<a name="26"><span class="lineNum">      26 </span>            : </a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">        604 : Material::Material(Material &amp;m) {</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">        604 :     ka = m.getKa();</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">        604 :     kd = m.getKd();</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineCov">        604 :     ks = m.getKs();</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">        604 :     n = m.getN();</span></a>
+<a name="32"><span class="lineNum">      32 </span><span class="lineCov">        604 : }</span></a>
+<a name="33"><span class="lineNum">      33 </span>            : </a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">     530503 : const Intensity Material::getKa() const noexcept { return ka; }</span></a>
+<a name="35"><span class="lineNum">      35 </span>            : </a>
+<a name="36"><span class="lineNum">      36 </span><span class="lineCov">     479161 : const Intensity Material::getKd() const noexcept { return kd; }</span></a>
+<a name="37"><span class="lineNum">      37 </span>            : </a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineCov">    1009135 : const Intensity Material::getKs() const noexcept { return ks; }</span></a>
+<a name="39"><span class="lineNum">      39 </span>            : </a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">     479264 : double Material::getN() const noexcept { return n; }</span></a>
+<a name="41"><span class="lineNum">      41 </span>            : </a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">        332 : Color Material::getColor() const noexcept {</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">        332 :     Intensity s = ka + kd + 2 * ks;</span></a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineCov">        332 :     return Color(s);</span></a>
+<a name="45"><span class="lineNum">      45 </span>            : }</a>
+<a name="46"><span class="lineNum">      46 </span>            : </a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">         54 : Material&amp; Material::operator=(const Material &amp;m) noexcept {</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">         54 :     ka = m.getKa();</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">         54 :     kd = m.getKd();</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">         54 :     ks = m.getKs();</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">         54 :     n = m.getN();</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">         54 :     return *this;</span></a>
+<a name="53"><span class="lineNum">      53 </span>            : }</a>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
