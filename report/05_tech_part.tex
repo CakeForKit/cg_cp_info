@@ -9,39 +9,39 @@
 	\item Средствами языка можно реализовать все алгоритмы, выбранные в результате проектирования;
 \end{itemize}
 
-Для создания пользовательского интерфейса был использован фреймворк~\texttt{QT}~\cite{qt}, так как данный фреймфорк предоставляет инструменты для создания пользовательских интерфейсов и поддерживается язык программирования~\texttt{C++}.
+Для создания пользовательского интерфейса был использован фреймворк~\texttt{QT}~\cite{qt}, так как данный фреймворк предоставляет инструменты для создания пользовательских интерфейсов и поддерживается язык программирования~\texttt{C++}.
 
 %Для сборки программного обеспечения использовалась утилита~\texttt{CMake}~\cite{cmake}, так как с ee помощью возможно управлять процессом компиляции и сборки проекта, написанного на \texttt{C++}.
 
-Для модульного тестирования компонент программного обеспечения был выбран фреймворк~\texttt{GoogleTest}~\cite{gtest}, так как данный фреймфорк предоставляет инструменты для написания модульных тестов на языке~\texttt{C++}.
+Для модульного тестирования компонент программного обеспечения был выбран фреймворк~\texttt{GoogleTest}~\cite{gtest}, так как данный фреймворк предоставляет инструменты для написания модульных тестов на языке~\texttt{C++}.
 
 Для определения покрытия кода использовалась утилита~\texttt{gcov}~\cite{gcov}.
 
 \clearpage
 \section{Реализации алгоритмов}
-В листингах~\ref{lst:ray_tracing}-\ref{lst:castRay} представлены реализация алгоритма обратной трассировки лучей и алгоритма испускания луча.
+В листинге~\ref{lst:castRay} представлена реализация алгоритма определения цвета пикселя.
+
+%\begin{center}
+%	\captionsetup{justification=raggedright,singlelinecheck=off}
+%	\renewcommand{\lstlistingname}{Листинг}
+%	\begin{lstlisting}[label=lst:ray_tracing, caption=Реализация алгоритма обратной трассировки лучей]
+%	void RayTracing::render() {
+%		for (int j = 0; j < drawer->getImgHeight(); ++j) {
+%			for (int i = 0; i < drawer->getImgWidth(); ++i) {
+%				Ray ray = camera->createRay(i, j);
+%				Intensity intens = castRay(ray);
+%				drawer->setPixelColor(i, j, Color(intens));
+%			}
+%		}
+%		drawer->setScene();
+%	}
+%	\end{lstlisting}
+%\end{center}
 
 \begin{center}
 	\captionsetup{justification=raggedright,singlelinecheck=off}
 	\renewcommand{\lstlistingname}{Листинг}
-	\begin{lstlisting}[label=lst:ray_tracing, caption=Реализация алгоритма обратной трассировки лучей]
-	void RayTracing::render() {
-		for (int j = 0; j < drawer->getImgHeight(); ++j) {
-			for (int i = 0; i < drawer->getImgWidth(); ++i) {
-				Ray ray = camera->createRay(i, j);
-				Intensity intens = castRay(ray);
-				drawer->setPixelColor(i, j, Color(intens));
-			}
-		}
-		drawer->setScene();
-	}
-	\end{lstlisting}
-\end{center}
-
-\begin{center}
-	\captionsetup{justification=raggedright,singlelinecheck=off}
-	\renewcommand{\lstlistingname}{Листинг}
-	\begin{lstlisting}[label=lst:castRay, caption=Реализация алгоритма испускания луча]
+	\begin{lstlisting}[label=lst:castRay, caption=Реализация алгоритма определения цвета пикселя]
 	Intensity StandardRayTracing::castRay(Ray &ray, const size_t depth, bool printing) const noexcept {
 		if (!ray.getDirection().isNormalized())
 		ray.getDirection().normalize();
@@ -141,30 +141,30 @@
 \section{Тестирование}
 
 \subsection{Функциональное тестирование}
-Для функционального тестирования была рассмотрена сцена, на которой изображены все виды фигур, и выделены следующие классы эквивалентности:
-\begin{itemize}
-	\item Камера расположена под углом $30^\circ$~(\ref{img:ft_3});
-	\item Вид сбоку~(\ref{img:ft_2});
-	\item Вид сверху~(\ref{img:ft_1});
-\end{itemize}
+Для функционального тестирования была рассмотрена сцена, на которой изображены все виды фигур, и выделены следующие классы эквивалентности: камера расположена под углом $30^\circ$~(\ref{img:ft_3}); вид сбоку~(\ref{img:ft_2}); вид сверху~(\ref{img:ft_1}).
+%\begin{itemize}
+%	\item Камера расположена под углом $30^\circ$~(\ref{img:ft_3});
+%	\item Вид сбоку~(\ref{img:ft_2});
+%	\item Вид сверху~(\ref{img:ft_1});
+%\end{itemize}
 
 \FloatBarrier
-\imgw{0.5\textwidth}{ft_3}{Камера расположена под углом $30^\circ$}
+\imgw{0.45\textwidth}{ft_3}{Камера расположена под углом $30^\circ$}
 \FloatBarrier
-\imgw{0.5\textwidth}{ft_2}{Вид сбоку}
+\imgw{0.45\textwidth}{ft_2}{Вид сбоку}
 \FloatBarrier
-\imgw{0.5\textwidth}{ft_1}{Вид сверху}
+\imgw{0.45\textwidth}{ft_1}{Вид сверху}
 \FloatBarrier
 
 \subsection{Модульное тестирование}
-Для модульного тестирования компонент программного обеспечения испозьвался фреймворк~\texttt{GoogleTest}~\cite{gtest}. 
+Для модульного тестирования компонент программного обеспечения использовался фреймворк~\texttt{GoogleTest}~\cite{gtest}. 
 
-Были созданы параметризованные тесты для функций классов: $Camera$, $RayTracing$, $Ray$, $Triangle$ и $TransformAction$. Для тестов каждого рассматриваемого объекта использовался класс фиксации, в котором производились настройки окружения, например создание классов $SceneManager$ и $MaterialManager$, в функции SetUp, а так же освобождение памяти, при необходимости, в функции TearDown.
+Были созданы параметризованные тесты для функций классов: $Camera$, $RayTracing$, $Ray$ и $Triangle$. Для тестов каждого рассматриваемого объекта использовался класс фиксации, в котором производились настройки окружения, например создание классов $SceneManager$ и $MaterialManager$, в функции SetUp, а также освобождение памяти, при необходимости, в функции TearDown.
 
 
 \subsection{Результаты тестирования}
 
-В качестве меры полноты тестирования был выбран процент покрытия строк кода. Результаты тестирования, были обработаны утилитой~\texttt{lcov}~\cite{lcov} и представленый в таблице~\ref{tbl:resTest}:
+В качестве меры полноты тестирования был выбран процент покрытия строк кода. Результаты тестирования, были обработаны утилитой~\texttt{lcov}~\cite{lcov} и представленный в таблице~\ref{tbl:resTest}:
 
 \begin{longtable}{|
 		>{\raggedright\arraybackslash}p{.25\textwidth - 2\tabcolsep}|
@@ -179,12 +179,12 @@
 	 & Hit & Total & Coverage \\\hline \\\hline                    
 	\endhead
 	\endfoot
-	Lines & 2071 & 2998 & 69.1 \% \\\hline
-	Functions & 318 & 463 & 68.7 \% \\\hline
+	Lines & 1080 & 3096 & 34.9 \% \\\hline
+	Functions & 220 & 463 & 47.5 \% \\\hline
 	
 \end{longtable}
 
-\clearpage
+%\clearpage
 \section*{Вывод из технологической части}
-Было реализовано програмное обеспечение и представлены средства реализации, листинги основных алгоритмов, описаны интерфейс приложения и методы тестирования.
+Было реализовано программное обеспечение и представлены средства реализации, листинги основных алгоритмов, описаны интерфейс приложения и методы тестирования.
 \clearpage
