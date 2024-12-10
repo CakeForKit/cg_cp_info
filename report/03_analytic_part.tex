@@ -160,7 +160,7 @@
 	\item \textbf{Зеркальное отражение} Направленное отражение которому на блестящих объектах образовываются блики. Наблюдатель видит зеркально отраженный свет только в том случае, когда угол отражения от идеальной отражающей поверхности равен углу падения. Интенсивность зеркального отражения света можно рассчитать по формуле~(\ref{eq:specular})
 	
 	\begin{equation}\label{eq:specular}
-		I_{s} = k_{s} \cdot I_{l} \cdot \frac{(\overrightarrow{R}, \overrightarrow{S})^n}{r + k},
+		I_{s} = k_{s} \cdot I_{l} \cdot \frac{\cos^n(\overrightarrow{R}, \overrightarrow{S})}{r + k},
 	\end{equation}
 	
 	\noindent где 
@@ -175,6 +175,10 @@
 	
 	
 \end{enumerate}
+
+\begin{equation}\label{eq:all}
+	I = k_{a} \cdot I_{a} + k_{d} \cdot I_{l} \cdot \frac{\cos(\overrightarrow{L}, \overrightarrow{N})}{r + k} + k_{s} \cdot I_{l} \cdot \frac{\cos^n(\overrightarrow{R}, \overrightarrow{S})}{r + k} + k_{s} \cdot I_{r} + k_{t} \cdot I_{t}
+\end{equation}
 
 \subsection{Глобальная модель освещения}
 Глобальная модель освещения дополняет локальную модель и позволяет учитывать положение объектов сцены относительно друг друга, благодаря чему появляется возможность визуализировать эффекты отражения света от других объектов и пропускания света сквозь прозрачные объекты.
