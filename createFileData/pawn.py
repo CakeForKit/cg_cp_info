@@ -31,9 +31,13 @@ def pawn(H, plus_alpha=20):
     circle_r.append((0, H))
 
     rs = [(0, 0), r1, r2, r4, *circle_r]
+
+    c = H ** 2 + radius ** 2
+    sphere = c / ((4 * c - 4 * radius ** 2) ** 0.5)
+    y0 = H - sphere
     # print('\n'.join([f'({x:.3f}, {y:.3f})' for x, y in rs]))
     with open(fn_pawn, 'w') as f:
         f.write('# pawn\n')
         f.write(f'# r={radius}, h={H}, alpha={plus_alpha}\n\n')
-        f.write(create_file(rs))
+        f.write(create_file(rs, sphere, y0))
         # print(create_file(rs))

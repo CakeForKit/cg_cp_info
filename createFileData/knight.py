@@ -7,7 +7,10 @@ def knight(H):
     r2 = (R, 0.15 * H)
     r3 = (0, 0.15 * H)
     rs = [(0, 0), r1, r2, r3]
-    text = create_file(rs)
+
+    c = H ** 2 + R ** 2
+    sphere = c / ((4 * c - 4 * R ** 2) ** 0.5)
+    text = create_file(rs, sphere, H - sphere)
 
     base1 = [
         (0.5 * R, 0.15 * H),

@@ -21,8 +21,9 @@ def queen(H):
         (0, H),
     ]
 
-    # print('\n'.join([f'({x:.3f}, {y:.3f})' for x, y in rs]))
+    c = H ** 2 + R ** 2
+    sphere = c / ((4 * c - 4 * R ** 2) ** 0.5)
     with open(fn_queen, 'w') as f:
         f.write(f'# queen \n# r={R}, h={H}\n\n')
-        f.write(create_file(rs))
+        f.write(create_file(rs, sphere, H - sphere))
         # print(create_file(rs))

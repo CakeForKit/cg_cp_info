@@ -1,6 +1,6 @@
 # black cells of chessboard
 # width_cell = 50 # board_plus = 25, height_chessboard = 50
-c 0 0 0
+c 0 0
 v -200 0 -150		# 1
 v -200 0 -100		# 2
 v -150 0 -100		# 3
@@ -193,3 +193,6 @@ f v121 v122 v123
 f v121 v124 v123
 f v125 v126 v127
 f v125 v128 v127
+
+s 322.10246816812815
+y -25.0

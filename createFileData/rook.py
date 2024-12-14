@@ -17,7 +17,8 @@ def rook(H):
         (0.7 * R, 0.85 * H),
         (0, 0.85 * H),
     ]
-    # print('\n'.join([f'({x:.3f}, {y:.3f})' for x, y in rs]))
+
+    sphere = (H**2 + 4 * R**2) ** 0.5 / 2
     with open(fn_rook, 'w') as f:
         f.write(f'# rook \n# r={R}, h={H}\n\n')
-        f.write(create_file(rs))
+        f.write(create_file(rs, sphere,  H / 2))

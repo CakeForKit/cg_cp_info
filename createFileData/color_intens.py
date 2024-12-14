@@ -33,3 +33,5 @@ if __name__ == '__main__':
     c_to_i('purple'.upper(), (157, 0, 255))
     c_to_i('pink'.upper(), (255, 0, 200))
     c_to_i('green'.upper(), (0, 148, 0))
+    c_to_i('BLUE'.upper(), (95, 204, 230))
+    c_to_i('RED'.upper(), (255, 0, 0))

@@ -11,7 +11,7 @@ fn_black_chessboard = folder_board + 'black_cells_chessboard.txt'
 fn_base_chessboard = folder_board + 'base_chessboard.txt'
 fn_data_chessborad = folder_board + 'positions_cells.txt'
 
-def create_file(rs):
+def create_file(rs, sphere, y0):
     text = 'c 0 0 0\n'
 
     for i in range(len(rs)):
@@ -22,4 +22,6 @@ def create_file(rs):
     for i in range(len(rs) - 1):
         text += f'l r{i+1} r{i+2}\n'
 
+    text += f'\ns {sphere}\n'
+    text += f'y {y0}\n'
     return text

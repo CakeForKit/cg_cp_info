@@ -84,11 +84,14 @@ def chessboard(width_cell, board_plus, height_chessboard):
                   (5, 12, 13), (5, 12, 14), (12, 13, 14)
                   ])
 
+    xypart = 4 * width_cell + board_plus
+    zpart = height_chessboard
+    sphere = (xypart**2 + xypart**2 + zpart**2) ** 0.5
     def write_data_to_file(f, text_name):
         f.write(text_name)
         f.write(f'# width_cell = {width_cell} ')
         f.write(f'# board_plus = {board_plus}, height_chessboard = {height_chessboard}\n')
-        f.write('c 0 0 0\n')
+        f.write('c 0 0\n')
 
     with open(fn_white_chessboard, 'w') as file:
         write_data_to_file(file, '# white cells of chessboard\n')
@@ -96,6 +99,7 @@ def chessboard(width_cell, board_plus, height_chessboard):
             file.write(f'v {whitep[i][0]} {whitep[i][1]} {whitep[i][2]}\t\t# {i + 1}\n')
         for i in range(len(whitev)):
             file.write(f'f v{whitev[i][0] + 1} v{whitev[i][1] + 1} v{whitev[i][2] + 1}\n')
+        file.write(f'\ns {sphere}\ny {-height_chessboard/2}\n')
 
     with open(fn_black_chessboard, 'w') as file:
         write_data_to_file(file, '# black cells of chessboard\n')
@@ -103,6 +107,7 @@ def chessboard(width_cell, board_plus, height_chessboard):
             file.write(f'v {blackp[i][0]} {blackp[i][1]} {blackp[i][2]}\t\t# {i + 1}\n')
         for i in range(len(blackv)):
             file.write(f'f v{blackv[i][0] + 1} v{blackv[i][1] + 1} v{blackv[i][2] + 1}\n')
+        file.write(f'\ns {sphere}\ny {-height_chessboard/2}\n')
 
     with open(fn_base_chessboard, 'w') as file:
         write_data_to_file(file, '# base of chessboard\n')
@@ -110,6 +115,7 @@ def chessboard(width_cell, board_plus, height_chessboard):
             file.write(f'v {basep[i][0]} {basep[i][1]} {basep[i][2]}\t\t# {i + 1}\n')
         for i in range(len(basev)):
             file.write(f'f v{basev[i][0] + 1} v{basev[i][1] + 1} v{basev[i][2] + 1}\n')
+        file.write(f'\ns {sphere}\ny {-height_chessboard/2}\n')
 
     with open(fn_data_chessborad, 'w') as file:
         file.write(f'cell_width {width_cell}\n')

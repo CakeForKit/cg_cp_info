@@ -22,8 +22,9 @@ def king(H):
         (0, 0.98 * H),
     ]
 
-    # print('\n'.join([f'({x:.3f}, {y:.3f})' for x, y in rs]))
+    c = H ** 2 + R ** 2 + H
+    sphere = c / ((4 * c - 4 * R ** 2) ** 0.5)
     with open(fn_king, 'w') as f:
         f.write(f'# king \n# r={R}, h={H}\n\n')
-        f.write(create_file(rs))
+        f.write(create_file(rs, sphere, H - sphere + 0.01 * R))
         # print(create_file(rs))

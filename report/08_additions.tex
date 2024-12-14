@@ -1,3 +1,75 @@
 \ssr{Приложение А}
 
-Презентация к курсовой работе 10 с.
+\begin{center}
+	\captionsetup{justification=raggedright,singlelinecheck=off}
+	  \renewcommand{\lstlistingname}{Листинг}
+%	\renewcommand{\lstlistingname}{\Asbuk{lstlisting}.\thesection}
+	\begin{lstlisting}[label=lst:castRay, caption=Реализация алгоритма трассировки луча]
+		Intensity StandardRayTracing::castRay(Ray &ray, const size_t depth, bool printing) const noexcept {
+			if (!ray.getDirection().isNormalized())
+			ray.getDirection().normalize();
+			
+			Intensity color(0, 0, 0);
+			
+			intersection_t intersect;
+			if (scene->intersection(ray, intersect) && depth < maxDepth) {
+				Point3 posLight;  
+				Vector3 L;          
+				intersection_t tmpIntersect;
+				Vector3 diff, spec;
+				double ddist;
+				for (Scene::iteratorLight it = scene->beginLight(); it != scene->endLight(); ++it) {
+					if ((*it)->getType() == typeLight::POINT) {
+						L = (posLight - intersect.point).normalized();  
+						
+						if (fabs(intersect.normal.length()) < EPS) {
+							return Intensity(1, 0, 0);
+						}
+						if (!intersect.normal.isNormalized())
+						intersect.normal.normalize();
+						double nL = L.scalarProduct(intersect.normal);  
+						
+						if (nL > 0 && !scene->intersection(Ray(intersect.point + 1e-3 * intersect.normal, L), tmpIntersect)) {
+							
+							diff = intersect.material->getKd() * nL;
+							
+							Vector3 reflectLight = L.reflect(intersect.normal);
+							double SR = reflectLight.scalarProduct(-ray.getDirection());
+							if (SR < 0)
+							SR = 0;
+							spec = intersect.material->getKs() * pow(SR, intersect.material->getN());
+							
+							ddist = (posLight - intersect.point).length() / (posLight.length() + EPS);
+							if (ddist > 1.0)
+							ddist = 1;
+							else if (ddist < 0.4)
+							ddist = 0.4;
+							
+							color += (diff + spec) * (*it)->getIntensity() / ddist;  
+						}
+						
+					} else if ((*it)->getType() == typeLight::AMBIENT) {
+						color += intersect.material->getKa() * (*it)->getIntensity();
+					}
+				}
+				
+				Vector3 reflectVec = ray.getDirection().reflect(intersect.normal);
+				Ray reflectRay(intersect.point + 1e-3 * intersect.normal, reflectVec);
+				Intensity reflectIntensity = castRay(reflectRay, depth + 1);
+				
+				color += intersect.material->getKs() * reflectIntensity;
+			}
+			else 
+			color = Intensity(0.3, 0.3, 0.3);
+			
+			return color;
+		}
+	\end{lstlisting}
+\end{center}
+
+\clearpage
+
+
+\ssr{Приложение Б}
+
+Презентация к курсовой работе 16 с.

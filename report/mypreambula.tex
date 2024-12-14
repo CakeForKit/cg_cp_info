@@ -19,9 +19,11 @@
 
 \usepackage{geometry}
 \geometry{left=30mm}
-\geometry{right=10mm}
+\geometry{right=15mm}
 \geometry{top=20mm}
 \geometry{bottom=20mm}
+
+\setlength{\parindent}{1.25cm}
 
 \usepackage{microtype}
 \sloppy	% изменяет поведение системы выравнивания текста, делая ее менее строгой в отношении ограничений на переносы и пробелы. 
@@ -67,7 +69,8 @@
 
 % Таблица справа (Подпись таблицы)
 \usepackage{caption}
-\captionsetup[table]{justification=raggedleft,singlelinecheck=off}
+%\captionsetup[table]{justification=raggedleft,singlelinecheck=off}
+\captionsetup[longtable]{justification=raggedright, singlelinecheck=off}
 
 \usepackage{multirow} % для создания ячеек в таблицах, которые объединяют несколько строк
 % для создания многострочных ячеек в таблицах
@@ -89,7 +92,7 @@
 % ---------- Картинки -------------------------------------------------
 % Рисунок 1 – Пример изображения.
 \captionsetup{labelsep=endash}
-\captionsetup[figure]{name={Рисунок}}
+\captionsetup[figure]{name={Рисунок}, justification=centering}
 
 % Создание рисунков
 \usepackage{graphicx}
@@ -128,12 +131,12 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \lstset{ %
-	language=C++,                 % выбор языка для подсветки (здесь это С++)
+%	language=C++,                 % выбор языка для подсветки (здесь это С++)
 	basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода
-	numbers=left,               % где поставить нумерацию строк (слева\справа)
-	numberstyle=\tiny,           % размер шрифта для номеров строк
-	stepnumber=1,                   % размер шага между двумя номерами строк
-	numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
+%	numbers=left,               % где поставить нумерацию строк (слева\справа)
+%	numberstyle=\tiny,           % размер шрифта для номеров строк
+%	stepnumber=1,                   % размер шага между двумя номерами строк
+%	numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
 	showspaces=false,            % показывать или нет пробелы специальными отступами
 	showstringspaces=false,      % показывать или нет пробелы в строках
 	showtabs=false,             % показывать или нет табуляцию в строках
@@ -160,6 +163,8 @@
 % Ссылки в pdf
  \usepackage[unicode,pdftex]{hyperref}
  \hypersetup{hidelinks}  % Скрывает визуальное оформление всех ссылок
+ 
+ \usepackage{cleveref}
 
 
 

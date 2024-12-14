@@ -11,114 +11,34 @@
 
 Для создания пользовательского интерфейса был использован фреймворк~\texttt{QT}~\cite{qt}, так как данный фреймворк предоставляет инструменты для создания пользовательских интерфейсов и поддерживается язык программирования~\texttt{C++}.
 
-%Для сборки программного обеспечения использовалась утилита~\texttt{CMake}~\cite{cmake}, так как с ee помощью возможно управлять процессом компиляции и сборки проекта, написанного на \texttt{C++}.
+Для сборки программного обеспечения использовалась утилита~\texttt{CMake}~\cite{cmake}, так как с ee помощью возможно управлять процессом компиляции и сборки проекта, написанного на \texttt{C++}.
 
 Для модульного тестирования компонент программного обеспечения был выбран фреймворк~\texttt{GoogleTest}~\cite{gtest}, так как данный фреймворк предоставляет инструменты для написания модульных тестов на языке~\texttt{C++}.
 
 Для определения покрытия кода использовалась утилита~\texttt{gcov}~\cite{gcov}.
 
 \clearpage
-\section{Реализации алгоритмов}
-В листинге~\ref{lst:castRay} представлена реализация алгоритма определения цвета пикселя.
+\section{Реализации алгоритма обратной трассировки лучей}
 
-%\begin{center}
-%	\captionsetup{justification=raggedright,singlelinecheck=off}
-%	\renewcommand{\lstlistingname}{Листинг}
-%	\begin{lstlisting}[label=lst:ray_tracing, caption=Реализация алгоритма обратной трассировки лучей]
-%	void RayTracing::render() {
-%		for (int j = 0; j < drawer->getImgHeight(); ++j) {
-%			for (int i = 0; i < drawer->getImgWidth(); ++i) {
-%				Ray ray = camera->createRay(i, j);
-%				Intensity intens = castRay(ray);
-%				drawer->setPixelColor(i, j, Color(intens));
-%			}
-%		}
-%		drawer->setScene();
-%	}
-%	\end{lstlisting}
-%\end{center}
+Для генерации кадра, состоящего из шахматных фигур, заданных полигонами, и шахматной доски с глянцевой или матовой поверхностью был использован алгоритм обратной трассировки лучей с глобальной моделью освещения. В этом методе для каждого пикселя генерируемого изображения создается луч, исходящий от наблюдателя, и для данного луча запускается алгоритм трассировки луча, представленный в приложении А. 
+
+Для поданного на вход луча определяется его пересечение с ближайшим видимым объектом сцены, в случае отсутствия пересечения, пиксель, определяемый лучом, закрашивается цветом фона. Если пересечение найдено, запускается луч, направленный на источник света для определения освещенности точки в пространстве, и запускается луч отражения если поверхность пересечения является глянцевой.
+
+%В листинге~\ref{lst:castRay} представлена реализация алгоритма трассировки луча.
+\clearpage
+\section{Описание процесса сборки приложения}
+Для сборки программного обеспечения использовалась утилита~\texttt{CMake}~\cite{cmake}. Для сборки приложения необходимо в командной строке, находясь в директории проекта, выполнить следующие команды~\ref{lst:build}.
 
 \begin{center}
 	\captionsetup{justification=raggedright,singlelinecheck=off}
 	\renewcommand{\lstlistingname}{Листинг}
-	\begin{lstlisting}[label=lst:castRay, caption=Реализация алгоритма определения цвета пикселя]
-	Intensity StandardRayTracing::castRay(Ray &ray, const size_t depth, bool printing) const noexcept {
-		if (!ray.getDirection().isNormalized())
-		ray.getDirection().normalize();
-		
-		Intensity color(0, 0, 0);
-		
-		intersection_t intersect;
-		if (scene->intersection(ray, intersect) && depth < maxDepth) {
-			Point3 posLight;  
-			Vector3 L;          
-			intersection_t tmpIntersect;
-			Vector3 diff, spec;
-			double ddist;
-			for (Scene::iteratorLight it = scene->beginLight(); it != scene->endLight(); ++it) {
-				if ((*it)->getType() == typeLight::POINT) {
-					L = (posLight - intersect.point).normalized();  
-					
-					if (fabs(intersect.normal.length()) < EPS) {
-						return Intensity(1, 0, 0);
-					}
-					if (!intersect.normal.isNormalized())
-					intersect.normal.normalize();
-					double nL = L.scalarProduct(intersect.normal);  
-					
-					if (nL > 0 && !scene->intersection(Ray(intersect.point + 1e-3 * intersect.normal, L), tmpIntersect)) {
-						
-						diff = intersect.material->getKd() * nL;
-						
-						Vector3 reflectLight = L.reflect(intersect.normal);
-						double SR = reflectLight.scalarProduct(-ray.getDirection());
-						if (SR < 0)
-						SR = 0;
-						spec = intersect.material->getKs() * pow(SR, intersect.material->getN());
-						
-						ddist = (posLight - intersect.point).length() / (posLight.length() + EPS);
-						if (ddist > 1.0)
-						ddist = 1;
-						else if (ddist < 0.4)
-						ddist = 0.4;
-						
-						color += (diff + spec) * (*it)->getIntensity() / ddist;  
-					}
-					
-				} else if ((*it)->getType() == typeLight::AMBIENT) {
-					color += intersect.material->getKa() * (*it)->getIntensity();
-				}
-			}
-			
-			Vector3 reflectVec = ray.getDirection().reflect(intersect.normal);
-			Ray reflectRay(intersect.point + 1e-3 * intersect.normal, reflectVec);
-			Intensity reflectIntensity = castRay(reflectRay, depth + 1);
-
-			color += intersect.material->getKs() * reflectIntensity;
-		}
-		else 
-		color = Intensity(0.3, 0.3, 0.3);
-		
-		return color;
-	}
+	\begin{lstlisting}[label=lst:build, caption=Сборка программного обеспечения]
+		$ cd build
+		$ cmake -S ..
+		$ cmake -build .
 	\end{lstlisting}
 \end{center}
 \clearpage
-
-
-%\section{Описание процесса сборки приложения}
-%Для сборки программного обеспечения использовалась утилита~\texttt{CMake}~\cite{cmake}. Для сборки приложения необходимо в командной строке, находясь в директории проекта, выполнить следующие команды~\ref{lst:build}.
-%
-%\begin{center}
-%	\captionsetup{justification=raggedright,singlelinecheck=off}
-%	\renewcommand{\lstlistingname}{Листинг}
-%	\begin{lstlisting}[label=lst:build, caption=Сборка программного обеспечения]
-%$ cd build
-%$ cmake -S ..
-%$ cmake -build .
-%	\end{lstlisting}
-%\end{center}
-%\clearpage
 
 \section{Описание интерфейса приложения}
 На рисунках~\ref{img:interface_create}-\ref{img:interface_tab} представлен интерфейс программы. 
@@ -142,11 +62,6 @@
 
 \subsection{Функциональное тестирование}
 Для функционального тестирования была рассмотрена сцена, на которой изображены все виды фигур, и выделены следующие классы эквивалентности: камера расположена под углом $30^\circ$~(\ref{img:ft_3}); вид сбоку~(\ref{img:ft_2}); вид сверху~(\ref{img:ft_1}).
-%\begin{itemize}
-%	\item Камера расположена под углом $30^\circ$~(\ref{img:ft_3});
-%	\item Вид сбоку~(\ref{img:ft_2});
-%	\item Вид сверху~(\ref{img:ft_1});
-%\end{itemize}
 
 \FloatBarrier
 \imgw{0.45\textwidth}{ft_3}{Камера расположена под углом $30^\circ$}
@@ -167,24 +82,23 @@
 В качестве меры полноты тестирования был выбран процент покрытия строк кода. Результаты тестирования, были обработаны утилитой~\texttt{lcov}~\cite{lcov} и представленный в таблице~\ref{tbl:resTest}:
 
 \begin{longtable}{|
-		>{\raggedright\arraybackslash}p{.25\textwidth - 2\tabcolsep}|
-		>{\raggedright\arraybackslash}p{.25\textwidth - 2\tabcolsep}|
-		>{\raggedright\arraybackslash}p{.25\textwidth - 2\tabcolsep}|
-		>{\raggedright\arraybackslash}p{.25\textwidth - 2\tabcolsep}|
+		>{\centering\arraybackslash}m{.3\textwidth - 2\tabcolsep}|
+		>{\centering\arraybackslash}m{.3\textwidth - 2\tabcolsep}|
+		>{\centering\arraybackslash}m{.4\textwidth - 2\tabcolsep}|
 	}
 	\caption{Результаты тестирования}\label{tbl:resTest} \\\hline
-	 & Hit & Total & Coverage \\\hline
+	Количество протестированных строк кода & Количество строк кода в проекте & Процент покрытия для созданного набора тестов \\\hline
 	\endfirsthead
 	\caption*{Продолжение таблицы~\ref{tbl:log} } \\\hline
-	 & Hit & Total & Coverage \\\hline \\\hline                    
+	Количество протестированных строк кода & Количество строк кода в проекте & Процент покрытия для созданного набора тестов \\\hline \\\hline                    
 	\endhead
 	\endfoot
-	Lines & 1080 & 3096 & 34.9 \% \\\hline
-	Functions & 220 & 463 & 47.5 \% \\\hline
+	2376 & 3096 & 77 \% \\\hline
+%	Functions & 220 & 463 & 47.5 \% \\\hline
 	
 \end{longtable}
 
 %\clearpage
 \section*{Вывод из технологической части}
-Было реализовано программное обеспечение и представлены средства реализации, листинги основных алгоритмов, описаны интерфейс приложения и методы тестирования.
+Было реализовано программное обеспечение и представлены средства реализации, описание алгоритма обратной трассировки лучей, описаны интерфейс приложения и методы тестирования.
 \clearpage
